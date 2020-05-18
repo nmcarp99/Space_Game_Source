@@ -14,6 +14,7 @@ int main()
 	al_init();
 	al_init_native_dialog_addon();
 	al_install_keyboard();
+	al_init_primitives_addon();
 
 	// create event queue
 	event_queue = al_create_event_queue();
