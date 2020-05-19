@@ -15,6 +15,7 @@ enum menuOption {
 	fontSelector
 };
 
+int numFonts = 4;
 struct selectFont {
 	ALLEGRO_FONT* Ancient_Medium;
 	ALLEGRO_FONT* Barbarian;
@@ -36,6 +37,8 @@ ALLEGRO_SAMPLE_INSTANCE* loop_instance = NULL;
 
 bool f11 = false;
 
+int mouseX, mouseY, windowXPos, windowYPos;
+int joystickSelect = 0;
 int selectedMenuOption = menuOption::fontSelector;
 
 const float FPS = 1.0 / 60;
@@ -47,13 +50,23 @@ int checkFontButtons(int mouseX, int mouseY) {
 	}
 
 	// Barbarian
-	if (mouseX >= 25 && mouseX <= 1055 && mouseY >= 195 && mouseY <= 245) {
+	else if (mouseX >= 25 && mouseX <= 1055 && mouseY >= 195 && mouseY <= 245) {
 		selectedFont = fonts.Barbarian;
 	}
 
 	// GODOFWAR
-	if (mouseX >= 25 && mouseX <= 1055 && mouseY >= 280 && mouseY <= 330) {
+	else if (mouseX >= 25 && mouseX <= 1055 && mouseY >= 280 && mouseY <= 330) {
 		selectedFont = fonts.GODOFWAR;
+	}
+
+	// Ancient Medium
+	else if ((joystickSelect == 0 && (mouseX >= 25 && mouseX <= 1055 && mouseY >= 365 && mouseY <= 415)) || joystickSelect == 4) {
+		selectedFont = fonts.Ancient_Medium;
+	}
+
+	// exit
+	else if ((joystickSelect == 0 && (mouseX >= 25 && mouseX <= 245 && mouseY >= 465 && mouseY <= 515)) || joystickSelect == 4) {
+		selectedMenuOption = menuOption::menu;
 	}
 
 	return 0;
@@ -61,11 +74,17 @@ int checkFontButtons(int mouseX, int mouseY) {
 
 int draw(int option)
 {
-	int mouseX, mouseY, xPos, yPos;
-	al_get_mouse_cursor_position(&mouseX, &mouseY);
-	al_get_window_position(display, &xPos, &yPos);
-	mouseX = mouseX - xPos;
-	mouseY = mouseY - yPos - 30;
+	int x, y, winX, winY;
+	al_get_mouse_cursor_position(&x, &y);
+	al_get_window_position(display, &winX, &winY);
+	x = x - winX;
+	y = y - winY - 30;
+	if ((x != mouseX || y != mouseY) && x >= 0 && y >= 0 && x <= 1080 && y <= 640 && joystickSelect != 0) {
+		joystickSelect = 0;
+	}
+	mouseX = x;
+	mouseY = y;
+
 	switch (option) {
 	case menuOption::customizeCharacter:
 		al_clear_to_color(al_map_rgb(0, 0, 0));
@@ -78,7 +97,7 @@ int draw(int option)
 		al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 20, ALLEGRO_ALIGN_CENTER, "Font Selecter");
 
 		// kingsthing spike
-		if (mouseX >= 25 && mouseX <= 1055 && mouseY >= 110 && mouseY <= 160) {
+		if ((joystickSelect == 0 && (mouseX >= 25 && mouseX <= 1055 && mouseY >= 110 && mouseY <= 160)) || joystickSelect == 1) {
 			al_draw_filled_rounded_rectangle(25, 110, 1055, 160, 50, 25, al_map_rgb(150, 150, 150));
 			al_draw_text(fonts.Kingthings_Spike, al_map_rgb(255, 0, 0), 540, 120, ALLEGRO_ALIGN_CENTER, "Kingsthing Spike");
 		}
@@ -88,7 +107,7 @@ int draw(int option)
 		}
 
 		// Barbarian
-		if (mouseX >= 25 && mouseX <= 1055 && mouseY >= 195 && mouseY <= 245) {
+		if ((joystickSelect == 0 && (mouseX >= 25 && mouseX <= 1055 && mouseY >= 195 && mouseY <= 245)) || joystickSelect == 2) {
 			al_draw_filled_rounded_rectangle(25, 195, 1055, 245, 50, 25, al_map_rgb(150, 150, 150));
 			al_draw_text(fonts.Barbarian, al_map_rgb(255, 0, 0), 540, 205, ALLEGRO_ALIGN_CENTER, "Barbarian");
 		}
@@ -97,13 +116,33 @@ int draw(int option)
 			al_draw_text(fonts.Barbarian, al_map_rgb(255, 0, 0), 540, 205, ALLEGRO_ALIGN_CENTER, "Barbarian");
 		}
 
-		if (mouseX >= 25 && mouseX <= 1055 && mouseY >= 280 && mouseY <= 330) {
+		// GODOFWAR
+		if ((joystickSelect == 0 && (mouseX >= 25 && mouseX <= 1055 && mouseY >= 280 && mouseY <= 330)) || joystickSelect == 3) {
 			al_draw_filled_rounded_rectangle(25, 280, 1055, 330, 50, 25, al_map_rgb(150, 150, 150));
 			al_draw_text(fonts.GODOFWAR, al_map_rgb(255, 0, 0), 540, 290, ALLEGRO_ALIGN_CENTER, "GODOFWAR");
 		}
 		else {
 			al_draw_filled_rounded_rectangle(25, 280, 1055, 330, 50, 25, al_map_rgb(255, 255, 255));
 			al_draw_text(fonts.GODOFWAR, al_map_rgb(255, 0, 0), 540, 290, ALLEGRO_ALIGN_CENTER, "GODOFWAR");
+		}
+
+		// Ancient Medium
+		if ((joystickSelect == 0 && (mouseX >= 25 && mouseX <= 1055 && mouseY >= 365 && mouseY <= 415)) || joystickSelect == 4) {
+			al_draw_filled_rounded_rectangle(25, 365, 1055, 415, 50, 25, al_map_rgb(150, 150, 150));
+			al_draw_text(fonts.Ancient_Medium, al_map_rgb(255, 0, 0), 540, 375, ALLEGRO_ALIGN_CENTER, "Ancient Medium");
+		}
+		else {
+			al_draw_filled_rounded_rectangle(25, 365, 1055, 415, 50, 25, al_map_rgb(255, 255, 255));
+			al_draw_text(fonts.Ancient_Medium, al_map_rgb(255, 0, 0), 540, 375, ALLEGRO_ALIGN_CENTER, "Ancient Medium");
+		}
+
+		if ((joystickSelect == 0 && (mouseX >= 25 && mouseX <= 245 && mouseY >= 465 && mouseY <= 515)) || joystickSelect == 4) {
+			al_draw_filled_rounded_rectangle(25, 465, 245, 515, 50, 25, al_map_rgb(150, 150, 150));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 135, 475, ALLEGRO_ALIGN_CENTER, "Exit");
+		}
+		else {
+			al_draw_filled_rounded_rectangle(25, 465, 245, 515, 50, 25, al_map_rgb(255, 255, 255));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 135, 475, ALLEGRO_ALIGN_CENTER, "Exit");
 		}
 		break;
 	}
@@ -179,6 +218,31 @@ int main()
 			break;
 		case ALLEGRO_EVENT_TIMER:
 			draw(selectedMenuOption);
+			break;
+		case ALLEGRO_EVENT_MOUSE_LEAVE_DISPLAY:
+			joystickSelect = 1;
+			break;
+		case ALLEGRO_EVENT_MOUSE_ENTER_DISPLAY:
+			joystickSelect = 0;
+			break;
+		case ALLEGRO_EVENT_KEY_UP:
+			if (joystickSelect == 0) {
+				joystickSelect = 1;
+			}
+			else {
+				switch (event.keyboard.keycode) {
+				case ALLEGRO_KEY_UP:
+					if (joystickSelect > 1) {
+						joystickSelect -= 1;
+					}
+					break;
+				case ALLEGRO_KEY_DOWN:
+					if (joystickSelect < numFonts) {
+						joystickSelect += 1;
+					}
+					break;
+				}
+			}
 			break;
 		case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
 			if (selectedMenuOption == menuOption::fontSelector) {
