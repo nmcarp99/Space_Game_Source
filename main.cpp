@@ -77,6 +77,7 @@ int checkFontButtons(int mouseX, int mouseY) {
 	// exit
 	else if ((joystickSelect == 0 && (mouseX >= 25 && mouseX <= 245 && mouseY >= 465 && mouseY <= 515)) || joystickSelect == 4) {
 		selectedMenuOption = menuOption::menu;
+		joystickSelect = 0;
 	}
 
 	return 0;
@@ -96,10 +97,60 @@ int draw(int option)
 	mouseY = y;
 
 	switch (option) {
-	case menuOption::customizeCharacter:
-		al_clear_to_color(al_map_rgb(0, 0, 0));
-		al_draw_filled_rounded_rectangle(0, 0, 1080, 50, 50, 25, al_map_rgb(255, 255, 255));
-		al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 10, ALLEGRO_ALIGN_CENTER, "Character Customizer");
+	case menuOption::menu:
+		al_draw_bitmap(stars, 0, 0, 0);
+		al_draw_filled_rounded_rectangle(0, 10, 1080, 60, 50, 25, al_map_rgb(255, 255, 255));
+		al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 20, ALLEGRO_ALIGN_CENTER, "Menu");
+
+		// kingsthing spike
+		if ((joystickSelect == 0 && (mouseX >= 25 && mouseX <= 1055 && mouseY >= 110 && mouseY <= 160)) || joystickSelect == 1) {
+			al_draw_filled_rounded_rectangle(25, 110, 1055, 160, 50, 25, al_map_rgb(150, 150, 150));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 120, ALLEGRO_ALIGN_CENTER, "Play");
+		}
+		else {
+			al_draw_filled_rounded_rectangle(25, 110, 1055, 160, 50, 25, al_map_rgb(255, 255, 255));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 120, ALLEGRO_ALIGN_CENTER, "Play");
+		}
+
+		// Barbarian
+		if ((joystickSelect == 0 && (mouseX >= 25 && mouseX <= 1055 && mouseY >= 195 && mouseY <= 245)) || joystickSelect == 2) {
+			al_draw_filled_rounded_rectangle(25, 195, 1055, 245, 50, 25, al_map_rgb(150, 150, 150));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 205, ALLEGRO_ALIGN_CENTER, "Options");
+		}
+		else {
+			al_draw_filled_rounded_rectangle(25, 195, 1055, 245, 50, 25, al_map_rgb(255, 255, 255));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 205, ALLEGRO_ALIGN_CENTER, "Options");
+		}
+
+		// GODOFWAR
+		if ((joystickSelect == 0 && (mouseX >= 25 && mouseX <= 1055 && mouseY >= 280 && mouseY <= 330)) || joystickSelect == 3) {
+			al_draw_filled_rounded_rectangle(25, 280, 1055, 330, 50, 25, al_map_rgb(150, 150, 150));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 290, ALLEGRO_ALIGN_CENTER, "Credits");
+		}
+		else {
+			al_draw_filled_rounded_rectangle(25, 280, 1055, 330, 50, 25, al_map_rgb(255, 255, 255));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 290, ALLEGRO_ALIGN_CENTER, "Credits");
+		}
+
+		// Ancient Medium
+		if ((joystickSelect == 0 && (mouseX >= 25 && mouseX <= 1055 && mouseY >= 365 && mouseY <= 415)) || joystickSelect == 4) {
+			al_draw_filled_rounded_rectangle(25, 365, 1055, 415, 50, 25, al_map_rgb(150, 150, 150));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 375, ALLEGRO_ALIGN_CENTER, "Ancient Medium");
+		}
+		else {
+			al_draw_filled_rounded_rectangle(25, 365, 1055, 415, 50, 25, al_map_rgb(255, 255, 255));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 375, ALLEGRO_ALIGN_CENTER, "Ancient Medium");
+		}
+
+		// exit
+		if ((joystickSelect == 0 && (mouseX >= 25 && mouseX <= 245 && mouseY >= 465 && mouseY <= 515)) || joystickSelect == 5) {
+			al_draw_filled_rounded_rectangle(25, 465, 245, 515, 50, 25, al_map_rgb(150, 150, 150));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 135, 475, ALLEGRO_ALIGN_CENTER, "Exit");
+		}
+		else {
+			al_draw_filled_rounded_rectangle(25, 465, 245, 515, 50, 25, al_map_rgb(255, 255, 255));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 135, 475, ALLEGRO_ALIGN_CENTER, "Exit");
+		}
 		break;
 	case menuOption::fontSelector:
 		al_draw_bitmap(stars, 0, 0, 0);
