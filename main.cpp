@@ -12,7 +12,9 @@ enum menuOption {
 	menu,
 	game,
 	customizeCharacter,
-	fontSelector
+	fontSelector,
+	options,
+	credits
 };
 
 enum joystickPosition {
@@ -44,44 +46,15 @@ ALLEGRO_SAMPLE_INSTANCE* intro_instance = NULL;
 ALLEGRO_SAMPLE_INSTANCE* loop_instance = NULL;
 
 bool f11 = false;
+bool running = true;
 
 int mouseX, mouseY, windowXPos, windowYPos;
 int joystickSelect = 0;
-int selectedMenuOption = menuOption::fontSelector;
+int selectedMenuOption = menuOption::menu;
 
 const float FPS = 1.0 / 60;
 
 int joystickState = joystickPosition::none;
-
-int checkFontButtons(int mouseX, int mouseY) {
-	// kingsthing spike
-	if (mouseX >= 25 && mouseX <= 1055 && mouseY >= 110 && mouseY <= 160) {
-		selectedFont = fonts.Kingthings_Spike;
-	}
-
-	// Barbarian
-	else if (mouseX >= 25 && mouseX <= 1055 && mouseY >= 195 && mouseY <= 245) {
-		selectedFont = fonts.Barbarian;
-	}
-
-	// GODOFWAR
-	else if (mouseX >= 25 && mouseX <= 1055 && mouseY >= 280 && mouseY <= 330) {
-		selectedFont = fonts.GODOFWAR;
-	}
-
-	// Ancient Medium
-	else if ((joystickSelect == 0 && (mouseX >= 25 && mouseX <= 1055 && mouseY >= 365 && mouseY <= 415)) || joystickSelect == 4) {
-		selectedFont = fonts.Ancient_Medium;
-	}
-
-	// exit
-	else if ((joystickSelect == 0 && (mouseX >= 25 && mouseX <= 245 && mouseY >= 465 && mouseY <= 515)) || joystickSelect == 4) {
-		selectedMenuOption = menuOption::menu;
-		joystickSelect = 0;
-	}
-
-	return 0;
-}
 
 // include functions from "draw.h"
 #include "functions.h"
@@ -140,7 +113,6 @@ int main()
 	// start the timer
 	al_start_timer(timer);
 
-	bool running = true;
 	while (running) {
 		ALLEGRO_EVENT event;
 		ALLEGRO_TIMEOUT timeout;
@@ -163,66 +135,28 @@ int main()
 			joystickSelect = 0;
 			break;
 		case ALLEGRO_EVENT_KEY_UP:
-			if (selectedMenuOption == menuOption::fontSelector) {
-				if (joystickSelect == 0) {
-					joystickSelect = 1;
-				}
-				else {
-					switch (event.keyboard.keycode) {
-					case ALLEGRO_KEY_UP:
-						if (joystickSelect > 1) {
-							joystickSelect -= 1;
-						}
-						break;
-					case ALLEGRO_KEY_DOWN:
-						if (joystickSelect < numFonts + 1) {
-							joystickSelect += 1;
-						}
-						break;
-					}
-				}
-			}
+			joystickKeys(event);
 			break;
 		case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
 			switch(selectedMenuOption) {
 			case menuOption::fontSelector:
-				checkFontButtons(event.mouse.x, event.mouse.y);
+				checkFontButtons(event.mouse.x, event.mouse.y, false);
+				break;
+			case menuOption::menu:
+				checkMenuButtons(event.mouse.x, event.mouse.y, false);
 				break;
 			}
 			break;
 		case ALLEGRO_EVENT_JOYSTICK_AXIS:
-			switch (selectedMenuOption) {
-			case menuOption::fontSelector:
-				fontSelectorJoystickAxis(event);
-				break;
-			}
+			joystickAxis(event);
 			break;
 		case ALLEGRO_EVENT_JOYSTICK_BUTTON_UP:
-			if (selectedMenuOption == menuOption::fontSelector) {
-				if (event.joystick.button == 0) {
-					switch (joystickSelect) {
-					case 1:
-						selectedFont = fonts.Kingthings_Spike;
-						break;
-					case 2:
-						selectedFont = fonts.Barbarian;
-						break;
-					case 3:
-						selectedFont = fonts.GODOFWAR;
-						break;
-					case 4:
-						selectedFont = fonts.Ancient_Medium;
-						break;
-					case 5:
-						selectedMenuOption = menuOption::menu;
-						break;
-					}
-				}
-				else if (event.joystick.button == 1) {
-					fadeToBlack(menuOption::fontSelector);
-					fadeFromBlack(menuOption::menu);
-					selectedMenuOption = menuOption::menu;
-				}
+			switch (selectedMenuOption) {
+			case menuOption::fontSelector:
+				checkFontButtons(NULL, NULL, true, event.joystick.button);
+				break;
+			case menuOption::menu:
+				checkMenuButtons(NULL, NULL, true, event.joystick.button);
 			}
 		}
 	}
