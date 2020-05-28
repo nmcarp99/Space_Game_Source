@@ -22,11 +22,11 @@ int draw(int option, bool noFlip = false)
 		// Customize Character
 		if ((joystickSelect == 0 && (mouseX >= 25 && mouseX <= 1055 && mouseY >= 110 && mouseY <= 160)) || joystickSelect == 1) {
 			al_draw_filled_rounded_rectangle(25, 110, 1055, 160, 50, 25, al_map_rgb(150, 150, 150));
-			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 120, ALLEGRO_ALIGN_CENTER, "Difficulty");
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 120, ALLEGRO_ALIGN_CENTER, "Difficulty: Easy / Medium / Hard");
 		}
 		else {
 			al_draw_filled_rounded_rectangle(25, 110, 1055, 160, 50, 25, al_map_rgb(255, 255, 255));
-			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 120, ALLEGRO_ALIGN_CENTER, "Difficulty");
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 120, ALLEGRO_ALIGN_CENTER, "Difficulty: Easy / Medium / Hard");
 		}
 
 		// Music
@@ -124,6 +124,7 @@ int draw(int option, bool noFlip = false)
 			al_draw_filled_rounded_rectangle(25, 465, 245, 515, 50, 25, al_map_rgb(255, 255, 255));
 			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 135, 475, ALLEGRO_ALIGN_CENTER, "Exit");
 		}
+		al_draw_bitmap(spaceship, 375, 430, 0);
 		break;
 	case menuOption::fontSelector:
 		al_draw_bitmap(stars, 0, 0, 0);
@@ -133,21 +134,21 @@ int draw(int option, bool noFlip = false)
 		// kingsthing spike
 		if ((joystickSelect == 0 && (mouseX >= 25 && mouseX <= 1055 && mouseY >= 110 && mouseY <= 160)) || joystickSelect == 1) {
 			al_draw_filled_rounded_rectangle(25, 110, 1055, 160, 50, 25, al_map_rgb(150, 150, 150));
-			al_draw_text(fonts.Kingthings_Spike, al_map_rgb(255, 0, 0), 540, 120, ALLEGRO_ALIGN_CENTER, "Kingsthing Spike");
+			al_draw_text(fonts.New_Rocker, al_map_rgb(255, 0, 0), 540, 120, ALLEGRO_ALIGN_CENTER, "New Rocker");
 		}
 		else {
 			al_draw_filled_rounded_rectangle(25, 110, 1055, 160, 50, 25, al_map_rgb(255, 255, 255));
-			al_draw_text(fonts.Kingthings_Spike, al_map_rgb(255, 0, 0), 540, 120, ALLEGRO_ALIGN_CENTER, "Kingsthing Spike");
+			al_draw_text(fonts.New_Rocker, al_map_rgb(255, 0, 0), 540, 120, ALLEGRO_ALIGN_CENTER, "New Rocker");
 		}
 
-		// Barbarian
+		// Metal_Mania
 		if ((joystickSelect == 0 && (mouseX >= 25 && mouseX <= 1055 && mouseY >= 195 && mouseY <= 245)) || joystickSelect == 2) {
 			al_draw_filled_rounded_rectangle(25, 195, 1055, 245, 50, 25, al_map_rgb(150, 150, 150));
-			al_draw_text(fonts.Barbarian, al_map_rgb(255, 0, 0), 540, 205, ALLEGRO_ALIGN_CENTER, "Barbarian");
+			al_draw_text(fonts.Metal_Mania, al_map_rgb(255, 0, 0), 540, 205, ALLEGRO_ALIGN_CENTER, "Metal Mania");
 		}
 		else {
 			al_draw_filled_rounded_rectangle(25, 195, 1055, 245, 50, 25, al_map_rgb(255, 255, 255));
-			al_draw_text(fonts.Barbarian, al_map_rgb(255, 0, 0), 540, 205, ALLEGRO_ALIGN_CENTER, "Barbarian");
+			al_draw_text(fonts.Metal_Mania, al_map_rgb(255, 0, 0), 540, 205, ALLEGRO_ALIGN_CENTER, "Metal Mania");
 		}
 
 		// GODOFWAR
@@ -295,15 +296,23 @@ int fadeFromBlack(int option) {
 	return 0;
 }
 
+int transitionTo(int menuoption) {
+	fadeToBlack(selectedMenuOption);
+	selectedMenuOption = menuoption;
+	fadeFromBlack(selectedMenuOption);
+
+	return 0;
+}
+
 int checkFontButtons(int mouseX, int mouseY, bool joystick, int button = NULL) {
 	if (joystick) {
 		if (button == 0) {
 			switch (joystickSelect) {
 			case 1:
-				selectedFont = fonts.Kingthings_Spike;
+				selectedFont = fonts.New_Rocker;
 				break;
 			case 2:
-				selectedFont = fonts.Barbarian;
+				selectedFont = fonts.Metal_Mania;
 				break;
 			case 3:
 				selectedFont = fonts.GODOFWAR;
@@ -312,27 +321,23 @@ int checkFontButtons(int mouseX, int mouseY, bool joystick, int button = NULL) {
 				selectedFont = fonts.Ancient_Medium;
 				break;
 			case 5:
-				fadeToBlack(selectedMenuOption);
-				selectedMenuOption = menuOption::menu;
-				fadeFromBlack(selectedMenuOption);
+				transitionTo(menuOption::menu);
 				break;
 			}
 		}
 		else if (button == 1) {
-			fadeToBlack(selectedMenuOption);
-			selectedMenuOption = menuOption::menu;
-			fadeFromBlack(selectedMenuOption);
+			transitionTo(menuOption::options);
 		}
 	}
 	else {
 		// kingsthing spike
 		if (mouseX >= 25 && mouseX <= 1055 && mouseY >= 110 && mouseY <= 160) {
-			selectedFont = fonts.Kingthings_Spike;
+			selectedFont = fonts.New_Rocker;
 		}
 
-		// Barbarian
+		// Metal_Mania
 		else if (mouseX >= 25 && mouseX <= 1055 && mouseY >= 195 && mouseY <= 245) {
-			selectedFont = fonts.Barbarian;
+			selectedFont = fonts.Metal_Mania;
 		}
 
 		// GODOFWAR
@@ -347,9 +352,7 @@ int checkFontButtons(int mouseX, int mouseY, bool joystick, int button = NULL) {
 
 		// exit
 		else if ((joystickSelect == 0 && (mouseX >= 25 && mouseX <= 245 && mouseY >= 465 && mouseY <= 515)) || joystickSelect == 4) {
-			fadeToBlack(selectedMenuOption);
-			selectedMenuOption = menuOption::menu;
-			fadeFromBlack(selectedMenuOption);
+			transitionTo(menuOption::menu);
 			joystickSelect = 0;
 		}
 	}
@@ -362,18 +365,16 @@ int checkMenuButtons(int mouseX, int mouseY, bool joystick, int button = NULL) {
 		if (button == 0) {
 			switch (joystickSelect) {
 			case 1:
-				selectedMenuOption = menuOption::game;;
+				transitionTo(menuOption::game);
 				break;
 			case 2:
-				selectedMenuOption = menuOption::game;
+				transitionTo(menuOption::game);
 				break;
 			case 3:
-				fadeToBlack(selectedMenuOption);
-				selectedMenuOption = menuOption::options;
-				fadeFromBlack(selectedMenuOption);
+				transitionTo(menuOption::options);
 				break;
 			case 4:
-				selectedMenuOption = menuOption::credits;
+				transitionTo(menuOption::credits);
 				break;
 			case 5:
 				fadeToBlack(selectedMenuOption);
@@ -383,35 +384,107 @@ int checkMenuButtons(int mouseX, int mouseY, bool joystick, int button = NULL) {
 		}
 		else if (button == 1) {
 			fadeToBlack(selectedMenuOption);
-			selectedMenuOption = menuOption::menu;
-			fadeFromBlack(selectedMenuOption);
+			running = false;
 		}
 	}
 	else {
 		// continue
 		if (mouseX >= 25 && mouseX <= 1055 && mouseY >= 110 && mouseY <= 160) {
-			selectedMenuOption = menuOption::game;
+			transitionTo(menuOption::game);
 		}
 
 		// new game
 		else if (mouseX >= 25 && mouseX <= 1055 && mouseY >= 195 && mouseY <= 245) {
-			selectedMenuOption = menuOption::game;
+			transitionTo(menuOption::game);
 		}
 
 		// options
 		else if (mouseX >= 25 && mouseX <= 1055 && mouseY >= 280 && mouseY <= 330) {
-			selectedMenuOption = menuOption::options;
+			transitionTo(menuOption::options);
 		}
 
 		// credits
 		else if ((joystickSelect == 0 && (mouseX >= 25 && mouseX <= 1055 && mouseY >= 365 && mouseY <= 415)) || joystickSelect == 4) {
-			selectedMenuOption = menuOption::credits;
+			transitionTo(menuOption::credits);
 		}
 
 		// exit
 		else if ((joystickSelect == 0 && (mouseX >= 25 && mouseX <= 245 && mouseY >= 465 && mouseY <= 515)) || joystickSelect == 4) {
 			fadeToBlack(selectedMenuOption);
 			running = false;
+		}
+	}
+
+	return 0;
+}
+
+int checkOptionsButtons(int mouseX, int mouseY, bool joystick, int button = NULL) {
+	if (joystick) {
+		if (button == 0) {
+			switch (joystickSelect) {
+			case 1:
+				difficulty++;
+				if (difficulty >= 3) {
+					difficulty = 0;
+				}
+				break;
+			case 2:
+				sound = !sound;
+				if (sound) {
+					al_play_sample_instance(intro_instance);
+				}
+				else {
+					al_stop_sample_instance(intro_instance);
+				}
+				break;
+			case 3:
+				transitionTo(menuOption::customizeCharacter);
+				break;
+			case 4:
+				transitionTo(menuOption::fontSelector);
+				break;
+			case 5:
+				transitionTo(menuOption::menu);
+				break;
+			}
+		}
+		else if (button == 1) {
+			transitionTo(menuOption::menu);
+		}
+	}
+	else {
+		// change difficulty
+		if (mouseX >= 25 && mouseX <= 1055 && mouseY >= 110 && mouseY <= 160) {
+			difficulty++;
+			if (difficulty >= 3) {
+				difficulty = 0;
+			}
+		}
+
+		// change sound
+		else if (mouseX >= 25 && mouseX <= 1055 && mouseY >= 195 && mouseY <= 245) {
+			sound = !sound;
+			if (sound) {
+				al_play_sample_instance(intro_instance);
+			}
+			else {
+				al_stop_sample_instance(intro_instance);
+			}
+		}
+
+		// customize character
+		else if (mouseX >= 25 && mouseX <= 1055 && mouseY >= 280 && mouseY <= 330) {
+			transitionTo(menuOption::customizeCharacter);
+		}
+
+		// font selector
+		else if ((joystickSelect == 0 && (mouseX >= 25 && mouseX <= 1055 && mouseY >= 365 && mouseY <= 415)) || joystickSelect == 4) {
+			transitionTo(menuOption::fontSelector);
+		}
+
+		// exit
+		else if ((joystickSelect == 0 && (mouseX >= 25 && mouseX <= 245 && mouseY >= 465 && mouseY <= 515)) || joystickSelect == 4) {
+			transitionTo(menuOption::menu);
 		}
 	}
 

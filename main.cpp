@@ -28,9 +28,9 @@ enum joystickPosition {
 int numFonts = 4;
 struct selectFont {
 	ALLEGRO_FONT* Ancient_Medium;
-	ALLEGRO_FONT* Barbarian;
+	ALLEGRO_FONT* Metal_Mania;
 	ALLEGRO_FONT* GODOFWAR;
-	ALLEGRO_FONT* Kingthings_Spike;
+	ALLEGRO_FONT* New_Rocker;
 } fonts;
 
 ALLEGRO_DISPLAY* display = NULL;
@@ -39,6 +39,7 @@ ALLEGRO_TIMER* timer = NULL;
 ALLEGRO_FONT* selectedFont = NULL;
 
 ALLEGRO_BITMAP* stars = NULL;
+ALLEGRO_BITMAP* spaceship = NULL;
 
 ALLEGRO_SAMPLE* intro = NULL;
 ALLEGRO_SAMPLE* loop = NULL;
@@ -47,10 +48,12 @@ ALLEGRO_SAMPLE_INSTANCE* loop_instance = NULL;
 
 bool f11 = false;
 bool running = true;
+bool sound = true;
 
 int mouseX, mouseY, windowXPos, windowYPos;
 int joystickSelect = 0;
 int selectedMenuOption = menuOption::menu;
+int difficulty = 0;
 
 const float FPS = 1.0 / 60;
 
@@ -84,6 +87,7 @@ int main()
 
 	// load images
 	stars = al_load_bitmap("stars.jpg");
+	spaceship = al_load_bitmap("spaceship.png");
 
 	// load audio
 	al_reserve_samples(2);
@@ -95,9 +99,9 @@ int main()
 
 	// load fonts
 	fonts.Ancient_Medium = al_load_font("Ancient Medium.ttf", 25, NULL);
-	fonts.Barbarian = al_load_font("Barbarian.ttf", 25, NULL);
+	fonts.Metal_Mania = al_load_font("Metal Mania.ttf", 25, NULL);
 	fonts.GODOFWAR = al_load_font("GODOFWAR.ttf", 25, NULL);
-	fonts.Kingthings_Spike = al_load_font("Kingthings Spike.ttf", 25, NULL);
+	fonts.New_Rocker = al_load_font("New Rocker.ttf", 25, NULL);
 	selectedFont = fonts.GODOFWAR;
 
 	// create timer
@@ -145,6 +149,9 @@ int main()
 			case menuOption::menu:
 				checkMenuButtons(event.mouse.x, event.mouse.y, false);
 				break;
+			case menuOption::options:
+				checkOptionsButtons(event.mouse.x, event.mouse.y, false);
+				break;
 			}
 			break;
 		case ALLEGRO_EVENT_JOYSTICK_AXIS:
@@ -157,6 +164,10 @@ int main()
 				break;
 			case menuOption::menu:
 				checkMenuButtons(NULL, NULL, true, event.joystick.button);
+				break;
+			case menuOption::options:
+				checkOptionsButtons(NULL, NULL, true, event.joystick.button);
+				break;
 			}
 		}
 	}
