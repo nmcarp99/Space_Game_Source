@@ -238,6 +238,43 @@ int joystickKeys(ALLEGRO_EVENT event) {
 	return 0;
 }
 
+int menuGameTrans()
+{
+	bool doneFading = false;
+	float backgroundSize = 0.0;
+	int imgWidth = al_get_bitmap_width(stars);
+	int imgHeight = al_get_bitmap_width(stars);
+	int transWidth = imgWidth;
+	int transHeight = imgHeight;
+	int transXPos = -10;
+	int transYPos = -10;
+	int circleWidth = -5;
+
+	while (!doneFading) {
+		ALLEGRO_TIMEOUT timeout;
+		ALLEGRO_EVENT event;
+
+		al_init_timeout(&timeout, FPS);
+
+		al_wait_for_event_until(event_queue, &event, &timeout);
+
+		switch (event.type) {
+		case ALLEGRO_EVENT_TIMER:
+			transWidth = transWidth + 16.875;
+			transHeight = transHeight + 10;
+			transXPos = 540 - (transWidth / 2);
+			transYPos = 540 - (transHeight / 2);
+			circleWidth = circleWidth + 5;
+			al_draw_scaled_bitmap(stars, 0, 0, imgWidth, imgHeight, transXPos, transYPos, transWidth, transHeight, 0);
+			al_draw_filled_circle(540, 320, circleWidth, al_map_rgb(0, 0, 0));
+			al_flip_display();
+			break;
+		}
+	}
+
+	return 0;
+}
+
 int fadeToBlack(int option) {
 	bool doneFading = false;
 	float transparency = 0.0;
@@ -365,10 +402,10 @@ int checkMenuButtons(int mouseX, int mouseY, bool joystick, int button = NULL) {
 		if (button == 0) {
 			switch (joystickSelect) {
 			case 1:
-				transitionTo(menuOption::game);
+				menuGameTrans();
 				break;
 			case 2:
-				transitionTo(menuOption::game);
+				menuGameTrans();
 				break;
 			case 3:
 				transitionTo(menuOption::options);
