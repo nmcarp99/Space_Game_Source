@@ -169,6 +169,10 @@ int main()
 				checkOptionsButtons(NULL, NULL, true, event.joystick.button);
 				break;
 			}
+			break;
+		case ALLEGRO_EVENT_JOYSTICK_CONFIGURATION:
+			al_reconfigure_joysticks();
+			break;
 		}
 	}
 }

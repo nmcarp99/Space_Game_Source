@@ -246,9 +246,9 @@ int menuGameTrans()
 	int imgHeight = al_get_bitmap_width(stars);
 	int transWidth = imgWidth;
 	int transHeight = imgHeight;
-	int transXPos = -10;
+	int transXPos = -16.875;
 	int transYPos = -10;
-	int circleWidth = -5;
+	int circleWidth = -10;
 
 	while (!doneFading) {
 		ALLEGRO_TIMEOUT timeout;
@@ -264,7 +264,7 @@ int menuGameTrans()
 			transHeight = transHeight + 10;
 			transXPos = 540 - (transWidth / 2);
 			transYPos = 540 - (transHeight / 2);
-			circleWidth = circleWidth + 5;
+			circleWidth = circleWidth + 10;
 			al_draw_scaled_bitmap(stars, 0, 0, imgWidth, imgHeight, transXPos, transYPos, transWidth, transHeight, 0);
 			al_draw_filled_circle(540, 320, circleWidth, al_map_rgb(0, 0, 0));
 			al_flip_display();
