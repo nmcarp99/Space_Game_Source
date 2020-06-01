@@ -14,7 +14,8 @@ enum menuOption {
 	customizeCharacter,
 	fontSelector,
 	options,
-	credits
+	credits,
+	joystickConnected
 };
 
 enum joystickPosition {
@@ -49,11 +50,15 @@ ALLEGRO_SAMPLE_INSTANCE* loop_instance = NULL;
 bool f11 = false;
 bool running = true;
 bool sound = true;
+bool firstPress = false;
+bool joystickWaitFramesStarted = false;
+bool doubleClickController = false;
 
 int mouseX, mouseY, windowXPos, windowYPos;
 int joystickSelect = 0;
 int selectedMenuOption = menuOption::menu;
 int difficulty = 0;
+int joystickWaitFrames = 0;
 
 const float FPS = 1.0 / 60;
 
@@ -117,7 +122,12 @@ int main()
 	// start the timer
 	al_start_timer(timer);
 
+	if (al_get_joystick(0)) {
+		selectedMenuOption = menuOption::joystickConnected;
+	}
+
 	while (running) {
+		std::cout << doubleClickController << std::endl;
 		ALLEGRO_EVENT event;
 		ALLEGRO_TIMEOUT timeout;
 
@@ -131,6 +141,15 @@ int main()
 			break;
 		case ALLEGRO_EVENT_TIMER:
 			draw(selectedMenuOption);
+			if (joystickWaitFramesStarted) {
+				joystickWaitFrames += 1;
+			}
+			if (joystickWaitFrames > 10) {
+				joystickWaitFramesStarted = false;
+				joystickWaitFrames = 0;
+				doubleClickController = false;
+				selectedMenuOption = menuOption::menu;
+			}
 			break;
 		case ALLEGRO_EVENT_MOUSE_LEAVE_DISPLAY:
 			joystickSelect = 1;
@@ -158,20 +177,40 @@ int main()
 			joystickAxis(event);
 			break;
 		case ALLEGRO_EVENT_JOYSTICK_BUTTON_UP:
-			switch (selectedMenuOption) {
-			case menuOption::fontSelector:
-				checkFontButtons(NULL, NULL, true, event.joystick.button);
-				break;
-			case menuOption::menu:
-				checkMenuButtons(NULL, NULL, true, event.joystick.button);
-				break;
-			case menuOption::options:
-				checkOptionsButtons(NULL, NULL, true, event.joystick.button);
-				break;
+			if (selectedMenuOption == menuOption::joystickConnected) {
+				if (joystickWaitFramesStarted) {
+					if (joystickWaitFrames <= 10) {
+						joystickWaitFramesStarted = false;
+						joystickWaitFrames = 0;
+						doubleClickController = true;
+						selectedMenuOption = menuOption::menu;
+					}
+				}
+				else {
+					joystickWaitFramesStarted = true;
+				}
+			}
+			else if (firstPress || !doubleClickController) {
+				firstPress = false;
+				switch (selectedMenuOption) {
+				case menuOption::fontSelector:
+					checkFontButtons(NULL, NULL, true, event.joystick.button);
+					break;
+				case menuOption::menu:
+					checkMenuButtons(NULL, NULL, true, event.joystick.button);
+					break;
+				case menuOption::options:
+					checkOptionsButtons(NULL, NULL, true, event.joystick.button);
+					break;
+				}
+			}
+			else {
+				firstPress = true;
 			}
 			break;
 		case ALLEGRO_EVENT_JOYSTICK_CONFIGURATION:
 			al_reconfigure_joysticks();
+			selectedMenuOption = menuOption::joystickConnected;
 			break;
 		}
 	}

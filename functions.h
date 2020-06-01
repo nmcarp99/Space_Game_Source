@@ -180,6 +180,25 @@ int draw(int option, bool noFlip = false)
 			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 135, 475, ALLEGRO_ALIGN_CENTER, "Exit");
 		}
 		break;
+
+	case menuOption::joystickConnected:
+		al_draw_bitmap(stars, 0, 0, 0);
+		al_draw_filled_rounded_rectangle(0, 10, 1080, 60, 50, 25, al_map_rgb(255, 255, 255));
+		al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 20, ALLEGRO_ALIGN_CENTER, "Controller Connected");
+
+		al_draw_filled_rounded_rectangle(25, 110, 1055, 160, 50, 25, al_map_rgb(255, 255, 255));
+		al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 120, ALLEGRO_ALIGN_CENTER, "Press Any Button On Your Controller To Continue...");
+
+		// exit
+		if (joystickSelect == 0 && (mouseX >= 25 && mouseX <= 245 && mouseY >= 465 && mouseY <= 515)) {
+		al_draw_filled_rounded_rectangle(25, 465, 245, 515, 50, 25, al_map_rgb(150, 150, 150));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 135, 475, ALLEGRO_ALIGN_CENTER, "Exit");
+		}
+		else {
+			al_draw_filled_rounded_rectangle(25, 465, 245, 515, 50, 25, al_map_rgb(255, 255, 255));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 135, 475, ALLEGRO_ALIGN_CENTER, "Exit");
+		}
+		break;
 	}
 	if (!noFlip) {
 		al_flip_display();
@@ -240,7 +259,6 @@ int joystickKeys(ALLEGRO_EVENT event) {
 
 int menuGameTrans()
 {
-	bool doneFading = false;
 	float backgroundSize = 0.0;
 	int imgWidth = al_get_bitmap_width(stars);
 	int imgHeight = al_get_bitmap_width(stars);
@@ -250,7 +268,8 @@ int menuGameTrans()
 	int transYPos = -10;
 	int circleWidth = -10;
 
-	while (!doneFading) {
+	while (circleWidth <= 628) {
+
 		ALLEGRO_TIMEOUT timeout;
 		ALLEGRO_EVENT event;
 
