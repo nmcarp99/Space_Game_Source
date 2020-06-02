@@ -57,6 +57,7 @@ bool doubleClickController = false;
 int mouseX, mouseY, windowXPos, windowYPos;
 int joystickSelect = 0;
 int selectedMenuOption = menuOption::menu;
+int previousMenuOption = menuOption::menu;
 int difficulty = 0;
 int joystickWaitFrames = 0;
 
@@ -127,7 +128,6 @@ int main()
 	}
 
 	while (running) {
-		std::cout << doubleClickController << std::endl;
 		ALLEGRO_EVENT event;
 		ALLEGRO_TIMEOUT timeout;
 
@@ -148,7 +148,7 @@ int main()
 				joystickWaitFramesStarted = false;
 				joystickWaitFrames = 0;
 				doubleClickController = false;
-				selectedMenuOption = menuOption::menu;
+				selectedMenuOption = previousMenuOption;
 			}
 			break;
 		case ALLEGRO_EVENT_MOUSE_LEAVE_DISPLAY:
@@ -158,7 +158,12 @@ int main()
 			joystickSelect = 0;
 			break;
 		case ALLEGRO_EVENT_KEY_UP:
-			joystickKeys(event);
+			if (selectedMenuOption == menuOption::joystickConnected) {
+				selectedMenuOption = previousMenuOption;
+			}
+			else {
+				joystickKeys(event);
+			}
 			break;
 		case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
 			switch(selectedMenuOption) {
@@ -183,7 +188,7 @@ int main()
 						joystickWaitFramesStarted = false;
 						joystickWaitFrames = 0;
 						doubleClickController = true;
-						selectedMenuOption = menuOption::menu;
+						selectedMenuOption = previousMenuOption;
 					}
 				}
 				else {
@@ -210,7 +215,10 @@ int main()
 			break;
 		case ALLEGRO_EVENT_JOYSTICK_CONFIGURATION:
 			al_reconfigure_joysticks();
-			selectedMenuOption = menuOption::joystickConnected;
+			if (al_get_joystick(0) != 0) {
+				previousMenuOption = selectedMenuOption;
+				selectedMenuOption = menuOption::joystickConnected;
+			}
 			break;
 		}
 	}
