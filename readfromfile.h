@@ -109,7 +109,6 @@ int replaceLineInts(std::string filename, int value, int replaceLine, int numVal
 std::string appData() {
     char* userVal;
     size_t len;
-    errno_t appdataErr;
     std::string result;
     _dupenv_s(&userVal, &len, "APPDATA");
     for (int i = 0; userVal[i]; i++) {

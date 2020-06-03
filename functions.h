@@ -52,11 +52,11 @@ int draw(int option, bool noFlip = false)
 		// Music
 		if ((joystickSelect == 0 && (mouseX >= 25 && mouseX <= 1055 && mouseY >= 195 && mouseY <= 245)) || joystickSelect == 2) {
 			al_draw_filled_rounded_rectangle(25, 195, 1055, 245, 50, 25, al_map_rgb(150, 150, 150));
-			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 205, ALLEGRO_ALIGN_CENTER, "Music: On / Off");
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 205, ALLEGRO_ALIGN_CENTER, "Configure Controllers");
 		}
 		else {
 			al_draw_filled_rounded_rectangle(25, 195, 1055, 245, 50, 25, al_map_rgb(255, 255, 255));
-			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 205, ALLEGRO_ALIGN_CENTER, "Music: On / Off");
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 205, ALLEGRO_ALIGN_CENTER, "Configure Controllers");
 		}
 
 		// Font
@@ -213,9 +213,149 @@ int draw(int option, bool noFlip = false)
 		al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 20, ALLEGRO_ALIGN_CENTER, "Controller Configuration Changed");
 
 		al_draw_filled_rounded_rectangle(25, 110, 1055, 160, 50, 25, al_map_rgb(255, 255, 255));
-		al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 120, ALLEGRO_ALIGN_CENTER, "Press Any Controller Button To Continue With A Controller...");
+		al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 120, ALLEGRO_ALIGN_CENTER, "Press The A Button On Your Controller To Continue With A Controller...");
 		al_draw_filled_rounded_rectangle(25, 195, 1055, 245, 50, 25, al_map_rgb(255, 255, 255));
 		al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 205, ALLEGRO_ALIGN_CENTER, "Press Any Keyboard Button To Continue With The Keyboard...");
+		break;
+	case menuOption::configureControllersMenu:
+		al_draw_bitmap(stars, 0, 0, 0);
+		al_draw_filled_rounded_rectangle(0, 10, 1080, 60, 50, 25, al_map_rgb(255, 255, 255));
+		al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 20, ALLEGRO_ALIGN_CENTER, "Configure Controllers");
+		// new config
+		if ((joystickSelect == 0 && (mouseX >= 25 && mouseX <= 1055 && mouseY >= 110 && mouseY <= 160)) || joystickSelect == 1) {
+			al_draw_filled_rounded_rectangle(25, 110, 1055, 160, 50, 25, al_map_rgb(150, 150, 150));
+			al_draw_text(fonts.New_Rocker, al_map_rgb(255, 0, 0), 540, 120, ALLEGRO_ALIGN_CENTER, "Create New Configuration");
+		}
+		else {
+			al_draw_filled_rounded_rectangle(25, 110, 1055, 160, 50, 25, al_map_rgb(255, 255, 255));
+			al_draw_text(fonts.New_Rocker, al_map_rgb(255, 0, 0), 540, 120, ALLEGRO_ALIGN_CENTER, "Create New Configuration");
+		}
+
+		// old config
+		if ((joystickSelect == 0 && (mouseX >= 25 && mouseX <= 1055 && mouseY >= 195 && mouseY <= 245)) || joystickSelect == 2) {
+			al_draw_filled_rounded_rectangle(25, 195, 1055, 245, 50, 25, al_map_rgb(150, 150, 150));
+			al_draw_text(fonts.Metal_Mania, al_map_rgb(255, 0, 0), 540, 205, ALLEGRO_ALIGN_CENTER, "Use Old Configuration");
+		}
+		else {
+			al_draw_filled_rounded_rectangle(25, 195, 1055, 245, 50, 25, al_map_rgb(255, 255, 255));
+			al_draw_text(fonts.Metal_Mania, al_map_rgb(255, 0, 0), 540, 205, ALLEGRO_ALIGN_CENTER, "Use Old Configuration");
+		}
+		break;
+	case menuOption::configureControllersNewSlotSelect:
+		al_draw_bitmap(stars, 0, 0, 0);
+		al_draw_filled_rounded_rectangle(0, 10, 1080, 60, 50, 25, al_map_rgb(255, 255, 255));
+		al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 20, ALLEGRO_ALIGN_CENTER, "Select Slot to Overwrite");
+
+		// continue
+		if ((joystickSelect == 0 && (mouseX >= 25 && mouseX <= 1055 && mouseY >= 110 && mouseY <= 160)) || joystickSelect == 1) {
+			al_draw_filled_rounded_rectangle(25, 110, 1055, 160, 50, 25, al_map_rgb(150, 150, 150));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 120, ALLEGRO_ALIGN_CENTER, "Slot 1");
+		}
+		else {
+			al_draw_filled_rounded_rectangle(25, 110, 1055, 160, 50, 25, al_map_rgb(255, 255, 255));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 120, ALLEGRO_ALIGN_CENTER, "Slot 1");
+		}
+
+		// New Game
+		if ((joystickSelect == 0 && (mouseX >= 25 && mouseX <= 1055 && mouseY >= 195 && mouseY <= 245)) || joystickSelect == 2) {
+			al_draw_filled_rounded_rectangle(25, 195, 1055, 245, 50, 25, al_map_rgb(150, 150, 150));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 205, ALLEGRO_ALIGN_CENTER, "Slot 2");
+		}
+		else {
+			al_draw_filled_rounded_rectangle(25, 195, 1055, 245, 50, 25, al_map_rgb(255, 255, 255));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 205, ALLEGRO_ALIGN_CENTER, "Slot 2");
+		}
+
+		// Options
+		if ((joystickSelect == 0 && (mouseX >= 25 && mouseX <= 1055 && mouseY >= 280 && mouseY <= 330)) || joystickSelect == 3) {
+			al_draw_filled_rounded_rectangle(25, 280, 1055, 330, 50, 25, al_map_rgb(150, 150, 150));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 290, ALLEGRO_ALIGN_CENTER, "Slot 3");
+		}
+		else {
+			al_draw_filled_rounded_rectangle(25, 280, 1055, 330, 50, 25, al_map_rgb(255, 255, 255));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 290, ALLEGRO_ALIGN_CENTER, "Slot 3");
+		}
+		break;
+	case menuOption::configureControllersNew:
+		al_draw_bitmap(stars, 0, 0, 0);
+		al_draw_filled_rounded_rectangle(0, 10, 1080, 60, 50, 25, al_map_rgb(255, 255, 255));
+		al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 20, ALLEGRO_ALIGN_CENTER, "Follow Instructions Below");
+
+		// kingsthing spike
+		if (aConfigured) {
+			al_draw_filled_rounded_rectangle(25, 110, 1055, 160, 50, 25, al_map_rgb(150, 150, 150));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 120, ALLEGRO_ALIGN_CENTER, "Press (A)");
+		}
+		else {
+			al_draw_filled_rounded_rectangle(25, 110, 1055, 160, 50, 25, al_map_rgb(255, 255, 255));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 120, ALLEGRO_ALIGN_CENTER, "Press (A)");
+		}
+
+		// Metal_Mania
+		if (bConfigured) {
+			al_draw_filled_rounded_rectangle(25, 195, 1055, 245, 50, 25, al_map_rgb(150, 150, 150));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 205, ALLEGRO_ALIGN_CENTER, "Press (B)");
+		}
+		else {
+			al_draw_filled_rounded_rectangle(25, 195, 1055, 245, 50, 25, al_map_rgb(255, 255, 255));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 205, ALLEGRO_ALIGN_CENTER, "Press (B)");
+		}
+
+		// GODOFWAR
+		if (xConfigured) {
+			al_draw_filled_rounded_rectangle(25, 280, 1055, 330, 50, 25, al_map_rgb(150, 150, 150));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 290, ALLEGRO_ALIGN_CENTER, "Press (X)");
+		}
+		else {
+			al_draw_filled_rounded_rectangle(25, 280, 1055, 330, 50, 25, al_map_rgb(255, 255, 255));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 290, ALLEGRO_ALIGN_CENTER, "Press (X)");
+		}
+
+		// Ancient Medium
+		if (yConfigured) {
+			al_draw_filled_rounded_rectangle(25, 365, 1055, 415, 50, 25, al_map_rgb(150, 150, 150));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 375, ALLEGRO_ALIGN_CENTER, "Press (Y)");
+		}
+		else {
+			al_draw_filled_rounded_rectangle(25, 365, 1055, 415, 50, 25, al_map_rgb(255, 255, 255));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 375, ALLEGRO_ALIGN_CENTER, "Press (Y)");
+		}
+
+		break;
+	case menuOption::configureControllersOldSlotSelect:
+		al_draw_bitmap(stars, 0, 0, 0);
+		al_draw_filled_rounded_rectangle(0, 10, 1080, 60, 50, 25, al_map_rgb(255, 255, 255));
+		al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 20, ALLEGRO_ALIGN_CENTER, "Select Slot to Use");
+
+		// continue
+		if ((joystickSelect == 0 && (mouseX >= 25 && mouseX <= 1055 && mouseY >= 110 && mouseY <= 160)) || joystickSelect == 1) {
+			al_draw_filled_rounded_rectangle(25, 110, 1055, 160, 50, 25, al_map_rgb(150, 150, 150));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 120, ALLEGRO_ALIGN_CENTER, "Slot 1");
+		}
+		else {
+			al_draw_filled_rounded_rectangle(25, 110, 1055, 160, 50, 25, al_map_rgb(255, 255, 255));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 120, ALLEGRO_ALIGN_CENTER, "Slot 1");
+		}
+
+		// New Game
+		if ((joystickSelect == 0 && (mouseX >= 25 && mouseX <= 1055 && mouseY >= 195 && mouseY <= 245)) || joystickSelect == 2) {
+			al_draw_filled_rounded_rectangle(25, 195, 1055, 245, 50, 25, al_map_rgb(150, 150, 150));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 205, ALLEGRO_ALIGN_CENTER, "Slot 2");
+		}
+		else {
+			al_draw_filled_rounded_rectangle(25, 195, 1055, 245, 50, 25, al_map_rgb(255, 255, 255));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 205, ALLEGRO_ALIGN_CENTER, "Slot 2");
+		}
+
+		// Options
+		if ((joystickSelect == 0 && (mouseX >= 25 && mouseX <= 1055 && mouseY >= 280 && mouseY <= 330)) || joystickSelect == 3) {
+			al_draw_filled_rounded_rectangle(25, 280, 1055, 330, 50, 25, al_map_rgb(150, 150, 150));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 290, ALLEGRO_ALIGN_CENTER, "Slot 3");
+		}
+		else {
+			al_draw_filled_rounded_rectangle(25, 280, 1055, 330, 50, 25, al_map_rgb(255, 255, 255));
+			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 290, ALLEGRO_ALIGN_CENTER, "Slot 3");
+		}
 		break;
 	}
 	if (!noFlip) {
@@ -238,14 +378,17 @@ int joystickAxis(ALLEGRO_EVENT event) {
 			case joystickPosition::up:
 				if (joystickSelect > 1) {
 					joystickSelect -= 1;
-					joystickState = joystickPosition::none;
 				}
+				joystickState = joystickPosition::none;
 				break;
 			case joystickPosition::down:
-				if (joystickSelect < numFonts + 1) {
-					joystickSelect += 1;
-					joystickState = joystickPosition::none;
+				if (joystickSelect < 5) {
+					if (((selectedMenuOption != menuOption::configureControllersMenu) || joystickSelect < 2) || ((selectedMenuOption != menuOption::configureControllersNewSlotSelect && selectedMenuOption != menuOption::configureControllersOldSlotSelect) || joystickSelect < 3)) {
+						joystickSelect += 1;
+					}
 				}
+				joystickState = joystickPosition::none;
+				break;
 			}
 		}
 	}
@@ -265,7 +408,7 @@ int joystickKeys(ALLEGRO_EVENT event) {
 			}
 			break;
 		case ALLEGRO_KEY_DOWN:
-			if (joystickSelect < numFonts + 1) {
+			if (joystickSelect < 5) {
 				joystickSelect += 1;
 			}
 			break;
@@ -310,6 +453,8 @@ int menuGameTrans()
 			break;
 		}
 	}
+
+	selectedMenuOption = menuOption::game;
 
 	return 0;
 }
@@ -382,7 +527,7 @@ int transitionTo(int menuoption) {
 
 int checkFontButtons(int mouseX, int mouseY, bool joystick, int button = NULL) {
 	if (joystick) {
-		if (button == 0) {
+		if (button == aButton) {
 			switch (joystickSelect) {
 			case 1:
 				selectedFont = fonts.New_Rocker;
@@ -405,7 +550,7 @@ int checkFontButtons(int mouseX, int mouseY, bool joystick, int button = NULL) {
 				break;
 			}
 		}
-		else if (button == 1) {
+		else if (button == bButton) {
 			transitionTo(menuOption::options);
 		}
 	}
@@ -442,7 +587,7 @@ int checkFontButtons(int mouseX, int mouseY, bool joystick, int button = NULL) {
 
 int checkMenuButtons(int mouseX, int mouseY, bool joystick, int button = NULL) {
 	if (joystick) {
-		if (button == 0) {
+		if (button == aButton) {
 			switch (joystickSelect) {
 			case 1:
 				menuGameTrans();
@@ -462,7 +607,7 @@ int checkMenuButtons(int mouseX, int mouseY, bool joystick, int button = NULL) {
 				break;
 			}
 		}
-		else if (button == 1) {
+		else if (button == bButton) {
 			fadeToBlack(selectedMenuOption);
 			running = false;
 		}
@@ -482,12 +627,12 @@ int checkMenuButtons(int mouseX, int mouseY, bool joystick, int button = NULL) {
 
 		// continue
 		if (mouseX >= 25 && mouseX <= 1055 && mouseY >= 110 && mouseY <= 160) {
-			transitionTo(menuOption::game);
+			menuGameTrans();
 		}
 
 		// new game
 		else if (mouseX >= 25 && mouseX <= 1055 && mouseY >= 195 && mouseY <= 245) {
-			transitionTo(menuOption::game);
+			menuGameTrans();
 		}
 
 		// options
@@ -512,7 +657,7 @@ int checkMenuButtons(int mouseX, int mouseY, bool joystick, int button = NULL) {
 
 int checkOptionsButtons(int mouseX, int mouseY, bool joystick, int button = NULL) {
 	if (joystick) {
-		if (button == 0) {
+		if (button == aButton) {
 			switch (joystickSelect) {
 			case 1:
 				difficulty++;
@@ -522,14 +667,7 @@ int checkOptionsButtons(int mouseX, int mouseY, bool joystick, int button = NULL
 				replaceLineInts(appdatapath + "menusettings.txt", difficulty, 0, 4);
 				break;
 			case 2:
-				sound = !sound;
-				if (sound) {
-					al_play_sample_instance(intro_instance);
-				}
-				else {
-					al_stop_sample_instance(intro_instance);
-				}
-				replaceLineInts(appdatapath + "menusettings.txt", sound, 1, 4);
+				transitionTo(menuOption::configureControllersMenu);
 				break;
 			case 3:
 				transitionTo(menuOption::customizeCharacter);
@@ -542,7 +680,7 @@ int checkOptionsButtons(int mouseX, int mouseY, bool joystick, int button = NULL
 				break;
 			}
 		}
-		else if (button == 1) {
+		else if (button == bButton) {
 			transitionTo(menuOption::menu);
 		}
 	}
@@ -556,16 +694,9 @@ int checkOptionsButtons(int mouseX, int mouseY, bool joystick, int button = NULL
 			replaceLineInts(appdatapath + "menusettings.txt", difficulty, 0, 4);
 		}
 
-		// change sound
+		// configure controllers
 		else if (mouseX >= 25 && mouseX <= 1055 && mouseY >= 195 && mouseY <= 245) {
-			sound = !sound;
-			if (sound) {
-				al_play_sample_instance(intro_instance);
-			}
-			else {
-				al_stop_sample_instance(intro_instance);
-			}
-			replaceLineInts(appdatapath + "menusettings.txt", sound, 1, 4);
+			transitionTo(menuOption::configureControllersMenu);
 		}
 
 		// customize character
@@ -584,5 +715,141 @@ int checkOptionsButtons(int mouseX, int mouseY, bool joystick, int button = NULL
 		}
 	}
 
+	return 0;
+}
+
+int checkConfigureControllersMenuButtons(int mouseX, int mouseY, bool joystick, int button = NULL) {
+	if (joystick) {
+		if (button == aButton) {
+			switch (joystickSelect) {
+			case 1:
+				transitionTo(menuOption::configureControllersNewSlotSelect);
+				break;
+			case 2:
+				transitionTo(menuOption::configureControllersOldSlotSelect);
+				break;
+			}
+		}
+		else if (button == bButton) {
+			transitionTo(menuOption::options);
+		}
+	}
+	else {
+		// change difficulty
+		if (mouseX >= 25 && mouseX <= 1055 && mouseY >= 110 && mouseY <= 160) {
+			transitionTo(menuOption::configureControllersNewSlotSelect);
+		}
+
+		// configure controllers
+		else if (mouseX >= 25 && mouseX <= 1055 && mouseY >= 195 && mouseY <= 245) {
+//			transitionTo(menuOption::configureControllersOldSlotSelect);
+		}
+	}
+
+	return 0;
+}
+
+int checkConfigureControllersNewSelectSlotButtons(int mouseX, int mouseY, bool joystick, int button = NULL) {
+	if (joystick) {
+		if (button == aButton) {
+			joystickConfigSlot = joystickSelect - 1;
+			transitionTo(menuOption::configureControllersNew);
+		}
+		else if (button == bButton) {
+			transitionTo(menuOption::configureControllersNewSlotSelect);
+		}
+	}
+	else {
+		// change difficulty
+		if (mouseX >= 25 && mouseX <= 1055 && mouseY >= 110 && mouseY <= 160) {
+			joystickConfigSlot = 0;
+			transitionTo(menuOption::configureControllersNew);
+		}
+
+		// configure controllers
+		else if (mouseX >= 25 && mouseX <= 1055 && mouseY >= 195 && mouseY <= 245) {
+			joystickConfigSlot = 1;
+			transitionTo(menuOption::configureControllersNew);
+		}
+
+		else if (mouseX >= 25 && mouseX <= 1055 && mouseY >= 280 && mouseY <= 330) {
+			joystickConfigSlot = 2;
+			transitionTo(menuOption::configureControllersNew);
+		}
+	}
+
+	return 0;
+}
+
+int checkConfigureControllersOldSelectSlotButtons(int mouseX, int mouseY, bool joystick, int button = NULL) {
+	if (joystick) {
+		if (button == aButton) {
+			joystickConfigSlot = joystickSelect - 1;
+			transitionTo(menuOption::options);
+		}
+		else if (button == bButton) {
+			transitionTo(menuOption::options);
+			return 0;
+		}
+	}
+	else {
+		// change difficulty
+		if (mouseX >= 25 && mouseX <= 1055 && mouseY >= 110 && mouseY <= 160) {
+			joystickConfigSlot = 0;
+			transitionTo(menuOption::options);
+		}
+
+		// configure controllers
+		else if (mouseX >= 25 && mouseX <= 1055 && mouseY >= 195 && mouseY <= 245) {
+			joystickConfigSlot = 1;
+			transitionTo(menuOption::options);
+		}
+
+		else if (mouseX >= 25 && mouseX <= 1055 && mouseY >= 280 && mouseY <= 330) {
+			joystickConfigSlot = 2;
+			transitionTo(menuOption::options);
+		}
+	}
+	// get joystick config
+	if (joystickConfigSlot == 0) {
+		aButton = getInts(appdatapath + "joystickslot1.txt")[0];
+		bButton = getInts(appdatapath + "joystickslot1.txt")[1];
+		xButton = getInts(appdatapath + "joystickslot1.txt")[2];
+		yButton = getInts(appdatapath + "joystickslot1.txt")[3];
+	}
+	else if (joystickConfigSlot == 1) {
+		aButton = getInts(appdatapath + "joystickslot2.txt")[0];
+		bButton = getInts(appdatapath + "joystickslot2.txt")[1];
+		xButton = getInts(appdatapath + "joystickslot2.txt")[2];
+		yButton = getInts(appdatapath + "joystickslot2.txt")[3];
+	}
+	else if (joystickConfigSlot == 2) {
+		aButton = getInts(appdatapath + "joystickslot3.txt")[0];
+		bButton = getInts(appdatapath + "joystickslot3.txt")[1];
+		xButton = getInts(appdatapath + "joystickslot3.txt")[2];
+		yButton = getInts(appdatapath + "joystickslot3.txt")[3];
+	}
+
+	return 0;
+}
+
+int checkConfigureControllersNewButtons(int mouseX, int mouseY, bool joystick, int button = NULL) {
+	if (!aConfigured) {
+		aButton = button;
+		aConfigured = true;
+	}
+	else if (!bConfigured) {
+		bButton = button;
+		bConfigured = true;
+	}
+	else if (!xConfigured) {
+		xButton = button;
+		xConfigured = true;
+	}
+	else if (!yConfigured) {
+		yButton = button;
+		yConfigured = true;
+	}
+	
 	return 0;
 }

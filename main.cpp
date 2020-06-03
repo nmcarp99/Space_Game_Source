@@ -16,7 +16,11 @@ enum menuOption {
 	fontSelector,
 	options,
 	credits,
-	joystickConnected
+	joystickConnected,
+	configureControllersMenu,
+	configureControllersNewSlotSelect,
+	configureControllersOldSlotSelect,
+	configureControllersNew
 };
 
 enum joystickPosition {
@@ -27,7 +31,6 @@ enum joystickPosition {
 	none
 };
 
-int numFonts = 4;
 struct selectFont {
 	ALLEGRO_FONT* Ancient_Medium;
 	ALLEGRO_FONT* Metal_Mania;
@@ -43,13 +46,18 @@ ALLEGRO_FONT* selectedFont = NULL;
 ALLEGRO_BITMAP* stars = NULL;
 ALLEGRO_BITMAP* spaceship = NULL;
 ALLEGRO_BITMAP* soundimg = NULL;
-ALLEGRO_BITMAP * mute = NULL;
+ALLEGRO_BITMAP* mute = NULL;
+ALLEGRO_BITMAP* field = NULL;
 
 ALLEGRO_SAMPLE* intro = NULL;
 ALLEGRO_SAMPLE* loop = NULL;
 ALLEGRO_SAMPLE_INSTANCE* intro_instance = NULL;
 ALLEGRO_SAMPLE_INSTANCE* loop_instance = NULL;
 
+bool aConfigured = false;
+bool bConfigured = false;
+bool xConfigured = false;
+bool yConfigured = false;
 bool f11 = false;
 bool running = true;
 bool sound = true;
@@ -57,8 +65,10 @@ bool firstPress = false;
 bool joystickWaitFramesStarted = false;
 bool doubleClickController = false;
 
+int aButton, bButton, xButton, yButton;
 int mouseX, mouseY, windowXPos, windowYPos;
 int joystickSelect = 0;
+int joystickConfigSlot = 0;
 int selectedMenuOption = menuOption::menu;
 int previousMenuOption = menuOption::menu;
 int difficulty = 0;
@@ -102,6 +112,8 @@ int main()
 
 	// get menu settings
 	menusettings = getStrings(appdatapath + "menusettings.txt");
+
+	// get difficulty
 	if (menusettings[0] == "1") {
 		difficulty = 1;
 	}
@@ -109,10 +121,12 @@ int main()
 		difficulty = 2;
 	}
 
+	// get sound
 	if (menusettings[1] == "0") {
 		sound = false;
 	}
 
+	// get font
 	if (menusettings[3] == "GODOFWAR") {
 		selectedFont = fonts.GODOFWAR;
 	}
@@ -126,12 +140,33 @@ int main()
 		selectedFont = fonts.New_Rocker;
 	}
 
+	// get joystick config
+	if (menusettings[4] == "0") {
+		aButton = getInts(appdatapath + "joystickslot1.txt")[0];
+		bButton = getInts(appdatapath + "joystickslot1.txt")[1];
+		xButton = getInts(appdatapath + "joystickslot1.txt")[2];
+		yButton = getInts(appdatapath + "joystickslot1.txt")[3];
+	}
+	else if (menusettings[4] == "1") {
+		aButton = getInts(appdatapath + "joystickslot2.txt")[0];
+		bButton = getInts(appdatapath + "joystickslot2.txt")[1];
+		xButton = getInts(appdatapath + "joystickslot2.txt")[2];
+		yButton = getInts(appdatapath + "joystickslot2.txt")[3];
+	}
+	else if (menusettings[4] == "2") {
+		aButton = getInts(appdatapath + "joystickslot3.txt")[0];
+		bButton = getInts(appdatapath + "joystickslot3.txt")[1];
+		xButton = getInts(appdatapath + "joystickslot3.txt")[2];
+		yButton = getInts(appdatapath + "joystickslot3.txt")[3];
+	}
+
 	// create event queue
 	event_queue = al_create_event_queue();
 
 	// create new display
 	al_set_new_window_position(200, 100);
 	al_set_new_window_title("Space Game");
+	al_set_new_display_flags(ALLEGRO_RESIZABLE);
 	display = al_create_display(1080, 640);
 
 	// load images
@@ -139,6 +174,7 @@ int main()
 	spaceship = al_load_bitmap("spaceship.png");
 	mute = al_load_bitmap("mute.png");
 	soundimg = al_load_bitmap("sound.png");
+	field = al_load_bitmap("field.jpg");
 
 	// load audio
 	al_reserve_samples(2);
@@ -217,6 +253,15 @@ int main()
 			case menuOption::options:
 				checkOptionsButtons(event.mouse.x, event.mouse.y, false);
 				break;
+			case menuOption::configureControllersMenu:
+				checkConfigureControllersMenuButtons(event.mouse.x, event.mouse.y, false);
+				break;
+			case menuOption::configureControllersNewSlotSelect:
+				checkConfigureControllersNewSelectSlotButtons(event.mouse.x, event.mouse.y, false);
+				break;
+			case menuOption::configureControllersOldSlotSelect:
+				checkConfigureControllersOldSelectSlotButtons(NULL, NULL, true, event.joystick.button);
+				break;
 			}
 			break;
 		case ALLEGRO_EVENT_JOYSTICK_AXIS:
@@ -247,6 +292,37 @@ int main()
 					break;
 				case menuOption::options:
 					checkOptionsButtons(NULL, NULL, true, event.joystick.button);
+					break;
+				case menuOption::configureControllersMenu:
+					checkConfigureControllersMenuButtons(NULL, NULL, true, event.joystick.button);
+					break;
+				case menuOption::configureControllersNewSlotSelect:
+					checkConfigureControllersNewSelectSlotButtons(NULL, NULL, true, event.joystick.button);
+					break;
+				case menuOption::configureControllersOldSlotSelect:
+					checkConfigureControllersOldSelectSlotButtons(NULL, NULL, true, event.joystick.button);
+					break;
+				case menuOption::configureControllersNew:
+					checkConfigureControllersNewButtons(NULL, NULL, true, event.joystick.button);
+					if (yConfigured) {
+						replaceLineInts(appdatapath + "menusettings.txt", joystickConfigSlot, 4, 5);
+						switch (joystickConfigSlot) {
+						case 0:
+							writeInts(appdatapath + "joystickslot1.txt", std::vector< int > { aButton, bButton, xButton, yButton }, 4);
+							break;
+						case 1:
+							writeInts(appdatapath + "joystickslot2.txt", std::vector< int > { aButton, bButton, xButton, yButton }, 4);
+							break;
+						case 2:
+							writeInts(appdatapath + "joystickslot3.txt", std::vector< int > { aButton, bButton, xButton, yButton }, 4);
+							break;
+						}
+						transitionTo(menuOption::options);
+						aConfigured = false;
+						bConfigured = false;
+						xConfigured = false;
+						yConfigured = false;
+					}
 					break;
 				}
 			}
