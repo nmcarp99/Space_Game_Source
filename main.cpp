@@ -7,6 +7,7 @@
 #include <allegro5/allegro_acodec.h>
 #include <allegro5/allegro_audio.h>
 #include <iostream>
+#include <vector>
 
 enum menuOption {
 	menu,
@@ -41,6 +42,8 @@ ALLEGRO_FONT* selectedFont = NULL;
 
 ALLEGRO_BITMAP* stars = NULL;
 ALLEGRO_BITMAP* spaceship = NULL;
+ALLEGRO_BITMAP* soundimg = NULL;
+ALLEGRO_BITMAP * mute = NULL;
 
 ALLEGRO_SAMPLE* intro = NULL;
 ALLEGRO_SAMPLE* loop = NULL;
@@ -65,7 +68,12 @@ const float FPS = 1.0 / 60;
 
 int joystickState = joystickPosition::none;
 
-// include functions from "draw.h"
+std::string appdatapath;
+
+std::vector< std::string > menusettings;
+
+// include functions
+#include "readfromfile.h"
 #include "functions.h"
 
 int main()
@@ -83,6 +91,41 @@ int main()
 	al_init_acodec_addon();
 	al_install_joystick();
 
+	// get appdata path
+	appdatapath = appData() + "Space Game\\";
+
+	// load fonts
+	fonts.Ancient_Medium = al_load_font("Ancient Medium.ttf", 25, NULL);
+	fonts.Metal_Mania = al_load_font("Metal Mania.ttf", 25, NULL);
+	fonts.GODOFWAR = al_load_font("GODOFWAR.ttf", 25, NULL);
+	fonts.New_Rocker = al_load_font("New Rocker.ttf", 25, NULL);
+
+	// get menu settings
+	menusettings = getStrings(appdatapath + "menusettings.txt");
+	if (menusettings[0] == "1") {
+		difficulty = 1;
+	}
+	else if (menusettings[0] == "2") {
+		difficulty = 2;
+	}
+
+	if (menusettings[1] == "0") {
+		sound = false;
+	}
+
+	if (menusettings[3] == "GODOFWAR") {
+		selectedFont = fonts.GODOFWAR;
+	}
+	else if (menusettings[3] == "Ancient_Medium") {
+		selectedFont = fonts.Ancient_Medium;
+	}
+	else if (menusettings[3] == "Metal_Mania") {
+		selectedFont = fonts.Metal_Mania;
+	}
+	else if (menusettings[3] == "New_Rocker") {
+		selectedFont = fonts.New_Rocker;
+	}
+
 	// create event queue
 	event_queue = al_create_event_queue();
 
@@ -94,6 +137,8 @@ int main()
 	// load images
 	stars = al_load_bitmap("stars.jpg");
 	spaceship = al_load_bitmap("spaceship.png");
+	mute = al_load_bitmap("mute.png");
+	soundimg = al_load_bitmap("sound.png");
 
 	// load audio
 	al_reserve_samples(2);
@@ -101,14 +146,10 @@ int main()
 	intro_instance = al_create_sample_instance(intro);
 	al_attach_sample_instance_to_mixer(intro_instance, al_get_default_mixer());
 	al_set_sample_instance_playmode(intro_instance, ALLEGRO_PLAYMODE_LOOP);
-	al_play_sample_instance(intro_instance);
 
-	// load fonts
-	fonts.Ancient_Medium = al_load_font("Ancient Medium.ttf", 25, NULL);
-	fonts.Metal_Mania = al_load_font("Metal Mania.ttf", 25, NULL);
-	fonts.GODOFWAR = al_load_font("GODOFWAR.ttf", 25, NULL);
-	fonts.New_Rocker = al_load_font("New Rocker.ttf", 25, NULL);
-	selectedFont = fonts.GODOFWAR;
+	if (sound) {
+		al_play_sample_instance(intro_instance);
+	}
 
 	// create timer
 	timer = al_create_timer(FPS);
@@ -215,7 +256,7 @@ int main()
 			break;
 		case ALLEGRO_EVENT_JOYSTICK_CONFIGURATION:
 			al_reconfigure_joysticks();
-			if (al_get_joystick(0) != 0) {
+			if (al_get_joystick(0)) {
 				previousMenuOption = selectedMenuOption;
 				selectedMenuOption = menuOption::joystickConnected;
 			}

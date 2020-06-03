@@ -22,11 +22,31 @@ int draw(int option, bool noFlip = false)
 		// Customize Character
 		if ((joystickSelect == 0 && (mouseX >= 25 && mouseX <= 1055 && mouseY >= 110 && mouseY <= 160)) || joystickSelect == 1) {
 			al_draw_filled_rounded_rectangle(25, 110, 1055, 160, 50, 25, al_map_rgb(150, 150, 150));
-			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 120, ALLEGRO_ALIGN_CENTER, "Difficulty: Easy / Medium / Hard");
+			switch (difficulty) {
+			case 0:
+				al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 120, ALLEGRO_ALIGN_CENTER, "Difficulty: Easy");
+				break;
+			case 1:
+				al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 120, ALLEGRO_ALIGN_CENTER, "Difficulty: Medium");
+				break;
+			case 2:
+				al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 120, ALLEGRO_ALIGN_CENTER, "Difficulty: Hard");
+				break;
+			}
 		}
 		else {
 			al_draw_filled_rounded_rectangle(25, 110, 1055, 160, 50, 25, al_map_rgb(255, 255, 255));
-			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 120, ALLEGRO_ALIGN_CENTER, "Difficulty: Easy / Medium / Hard");
+			switch (difficulty) {
+			case 0:
+				al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 120, ALLEGRO_ALIGN_CENTER, "Difficulty: Easy");
+				break;
+			case 1:
+				al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 120, ALLEGRO_ALIGN_CENTER, "Difficulty: Medium");
+				break;
+			case 2:
+				al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 540, 120, ALLEGRO_ALIGN_CENTER, "Difficulty: Hard");
+				break;
+			}
 		}
 
 		// Music
@@ -125,6 +145,12 @@ int draw(int option, bool noFlip = false)
 			al_draw_text(selectedFont, al_map_rgb(255, 0, 0), 135, 475, ALLEGRO_ALIGN_CENTER, "Exit");
 		}
 		al_draw_bitmap(spaceship, 375, 430, 0);
+		if (sound) {
+			al_draw_bitmap(soundimg, 8, 8, 0);
+		}
+		else {
+			al_draw_bitmap(mute, 8, 8, 0);
+		}
 		break;
 	case menuOption::fontSelector:
 		al_draw_bitmap(stars, 0, 0, 0);
@@ -275,7 +301,9 @@ int menuGameTrans()
 			transHeight = transHeight + 10;
 			transXPos = 540 - (transWidth / 2);
 			transYPos = 540 - (transHeight / 2);
-			circleWidth = circleWidth + 10;
+			if (transWidth >= 2080) {
+				circleWidth = circleWidth + 10;
+			}
 			al_draw_scaled_bitmap(stars, 0, 0, imgWidth, imgHeight, transXPos, transYPos, transWidth, transHeight, 0);
 			al_draw_filled_circle(540, 320, circleWidth, al_map_rgb(0, 0, 0));
 			al_flip_display();
@@ -358,15 +386,19 @@ int checkFontButtons(int mouseX, int mouseY, bool joystick, int button = NULL) {
 			switch (joystickSelect) {
 			case 1:
 				selectedFont = fonts.New_Rocker;
+				replaceLinestrings(appdatapath + "menusettings.txt", "New_Rocker", 3, 4);
 				break;
 			case 2:
 				selectedFont = fonts.Metal_Mania;
+				replaceLinestrings(appdatapath + "menusettings.txt", "Metal_Mania", 3, 4);
 				break;
 			case 3:
 				selectedFont = fonts.GODOFWAR;
+				replaceLinestrings(appdatapath + "menusettings.txt", "GODOFWAR", 3, 4);
 				break;
 			case 4:
 				selectedFont = fonts.Ancient_Medium;
+				replaceLinestrings(appdatapath + "menusettings.txt", "Ancient_Medium", 3, 4);
 				break;
 			case 5:
 				transitionTo(menuOption::menu);
@@ -436,6 +468,18 @@ int checkMenuButtons(int mouseX, int mouseY, bool joystick, int button = NULL) {
 		}
 	}
 	else {
+		// mute/unmute
+		if (mouseX >= 8 && mouseX <= 58 && mouseY >= 8 && mouseY <= 58) {
+			sound = !sound;
+			if (sound) {
+				al_play_sample_instance(intro_instance);
+			}
+			else {
+				al_stop_sample_instance(intro_instance);
+			}
+			replaceLineInts(appdatapath + "menusettings.txt", sound, 1, 4);
+		}
+
 		// continue
 		if (mouseX >= 25 && mouseX <= 1055 && mouseY >= 110 && mouseY <= 160) {
 			transitionTo(menuOption::game);
@@ -475,6 +519,7 @@ int checkOptionsButtons(int mouseX, int mouseY, bool joystick, int button = NULL
 				if (difficulty >= 3) {
 					difficulty = 0;
 				}
+				replaceLineInts(appdatapath + "menusettings.txt", difficulty, 0, 4);
 				break;
 			case 2:
 				sound = !sound;
@@ -484,6 +529,7 @@ int checkOptionsButtons(int mouseX, int mouseY, bool joystick, int button = NULL
 				else {
 					al_stop_sample_instance(intro_instance);
 				}
+				replaceLineInts(appdatapath + "menusettings.txt", sound, 1, 4);
 				break;
 			case 3:
 				transitionTo(menuOption::customizeCharacter);
@@ -507,6 +553,7 @@ int checkOptionsButtons(int mouseX, int mouseY, bool joystick, int button = NULL
 			if (difficulty >= 3) {
 				difficulty = 0;
 			}
+			replaceLineInts(appdatapath + "menusettings.txt", difficulty, 0, 4);
 		}
 
 		// change sound
@@ -518,6 +565,7 @@ int checkOptionsButtons(int mouseX, int mouseY, bool joystick, int button = NULL
 			else {
 				al_stop_sample_instance(intro_instance);
 			}
+			replaceLineInts(appdatapath + "menusettings.txt", sound, 1, 4);
 		}
 
 		// customize character
